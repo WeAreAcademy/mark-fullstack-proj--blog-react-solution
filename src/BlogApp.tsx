@@ -13,8 +13,8 @@ function BlogApp() {
   );
 }
 //TODO: (go to origin server and proxy?)
-const apiBaseURL = process.env.REACT_APP_API_BASE ?? "http://localhost:4000";
-console.log(`apiBaseURL will be: ${apiBaseURL}`);
+console.assert(process.env.REACT_APP_API_BASE, "Need api base env var");
+const apiBaseURL = process.env.REACT_APP_API_BASE;
 
 interface IBlogPost {
   id: number;
