@@ -5,15 +5,16 @@ function BlogApp() {
   return (
     <div className="App">
       <header className="App-header">This is the header</header>
-      <main>hello this is the main</main>
-      <BlogPosts />
+      <main>
+        <BlogPosts />
+      </main>
       <footer>this is the footer</footer>
     </div>
   );
 }
-//TODO: read from config.  (or go to origin server and proxy)
-// const baseURL = "https://neill-blog-pg-ts.herokuapp.com";
-const baseURL = "http://localhost:4000";
+//TODO: (go to origin server and proxy?)
+const apiBaseURL = process.env.REACT_APP_API_BASE ?? "http://localhost:4000";
+console.log(`apiBaseURL will be: ${apiBaseURL}`);
 
 interface IBlogPost {
   id: number;
@@ -25,7 +26,7 @@ interface IBlogPost {
 function BlogPosts() {
   const [posts, setPosts] = useState<IBlogPost[]>([]);
   const fetchAndStorePosts = () => {
-    fetch(`${baseURL}/posts/`)
+    fetch(`${apiBaseURL}/posts/`)
       .then((res) => res.json())
       .then((json) => setPosts(json));
   };
