@@ -5,6 +5,12 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+body * {
+  padding: 0;
+  margin: 0;
 }
 
 code {
@@ -29,4 +35,11 @@ code {
 
 .App-link {
   color: #61dafb;
+}
+
+.blog-post {
+  border-radius: 10px;
+  background-color: whitesmoke;
+  margin-top: 20px;
+  padding: 20px;
 }
