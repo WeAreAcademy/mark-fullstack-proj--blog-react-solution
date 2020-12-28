@@ -43,3 +43,18 @@ code {
   margin-top: 20px;
   padding: 20px;
 }
+
+.comment {
+  border-radius: 5px;
+  border: solid 5px gray;
+  background-color: white;
+  margin-top: 10px;
+  padding: 10px;
+}
+
+.comment-header {
+  margin-bottom: 10px;
+}
+header .listAll {
+  cursor: pointer;
+}
