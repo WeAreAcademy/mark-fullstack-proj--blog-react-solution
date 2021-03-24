@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
+import apiBaseURL from "./api";
 import "./App.css";
+import SingleArticle from "./Components/SingleArticle";
+import { IArticle } from "./types";
 
 function BlogApp() {
   const handleClickOneArticle: (id: number) => void = (id: number) => {
@@ -31,16 +34,8 @@ function BlogApp() {
     </div>
   );
 }
-//TODO: (go to origin server and proxy?)
-console.assert(process.env.REACT_APP_API_BASE, "Need api base env var");
-const apiBaseURL = process.env.REACT_APP_API_BASE;
 
-interface IArticle {
-  id: number;
-  title: string;
-  prose: string;
-  date: string;
-}
+
 interface IArticleProps extends IArticle {
   handleClick: (id: number) => void;
 }
@@ -87,64 +82,5 @@ const Article: React.FC<IArticleProps> = ({
     </div>
   );
 };
-
-interface ISingleArticleProps {
-  id: number;
-}
-interface IComment {
-  id: number;
-  article_id: number;
-  prose: string;
-  date: string;
-}
-
-interface ICommentProps extends IComment { }
-
-const SingleArticle: React.FC<ISingleArticleProps> = ({ id }) => {
-  const [article, setArticle] = useState<IArticle | null>(null);
-  const [comments, setComments] = useState<IComment[]>([]);
-
-
-  useEffect(() => {
-
-    const fetchAndStoreArticle = async () => {
-      const res = await fetch(apiBaseURL + `/articles/${id}`);
-      const json = await res.json();
-      setArticle(json);
-    };
-
-    const fetchAndStoreComments = async () => {
-      const res = await fetch(apiBaseURL + `/articles/${id}/comments`);
-      const json = await res.json();
-      setComments(json);
-    };
-
-    fetchAndStoreComments();
-    fetchAndStoreArticle();
-  }, [id]);
-  if (article !== null && comments !== null) {
-    return (
-      <div className="article">
-        <h2>{article.title}</h2>
-        <div>{article.prose}</div>
-        <div>Written on {article.date}</div>
-        <div className="commentsList">
-          {comments.map((c) => (
-            <Comment {...c} key={c.id} />
-          ))}
-        </div>
-      </div>
-    );
-  } else {
-    return <div>Loading...</div>;
-  }
-};
-
-const Comment: React.FC<ICommentProps> = ({ prose, date }) => (
-  <div className="comment">
-    <div className="comment-header">Comment by anonymous at {date}</div>
-    <div className="comment-prose">{prose}</div>
-  </div>
-);
 
 export default BlogApp;
