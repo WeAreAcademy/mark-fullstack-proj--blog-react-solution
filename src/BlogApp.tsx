@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./App.css";
 
 function BlogApp() {
-  const handleClickOneBlogPost: (id: number) => void = (id: number) => {
+  const handleClickOneArticle: (id: number) => void = (id: number) => {
     setFocusedId(id);
   };
   const handleClickListAll: () => void = () => {
@@ -16,15 +16,15 @@ function BlogApp() {
       <header className="App-header">
         {focusedId !== null && (
           <div className="listAll" onClick={handleClickListAll}>
-            See all posts
+            See all articles
           </div>
         )}
       </header>
       <main>
         {focusedId === null ? (
-          <BlogPosts {...{ handleClickOneBlogPost }} />
+          <Articles {...{ handleClickOneArticle }} />
         ) : (
-          <SingleBlogPost id={focusedId} />
+          <SingleArticle id={focusedId} />
         )}
       </main>
       <footer>this is the footer</footer>
@@ -35,36 +35,36 @@ function BlogApp() {
 console.assert(process.env.REACT_APP_API_BASE, "Need api base env var");
 const apiBaseURL = process.env.REACT_APP_API_BASE;
 
-interface IBlogPost {
+interface IArticle {
   id: number;
   title: string;
   prose: string;
   date: string;
 }
-interface IBlogPostProps extends IBlogPost {
+interface IArticleProps extends IArticle {
   handleClick: (id: number) => void;
 }
 
-interface IBlogPostsProps {
-  handleClickOneBlogPost: (e: any) => void;
+interface IArticlesProps {
+  handleClickOneArticle: (e: any) => void;
 }
 
-const BlogPosts: React.FC<IBlogPostsProps> = (props) => {
-  const [posts, setPosts] = useState<IBlogPost[]>([]);
-  const fetchAndStorePosts = () => {
+const Articles: React.FC<IArticlesProps> = (props) => {
+  const [articles, setArticles] = useState<IArticle[]>([]);
+  const fetchAndStoreArticles = () => {
     fetch(`${apiBaseURL}/articles/`)
       .then((res) => res.json())
-      .then((json) => setPosts(json));
+      .then((json) => setArticles(json));
   };
 
-  useEffect(fetchAndStorePosts, []);
+  useEffect(fetchAndStoreArticles, []);
   return (
-    <div className="blog-posts">
-      I will show all your blog posts. There are {posts.length}
-      {posts.map((p) => (
-        <BlogPost
+    <div className="articles">
+      I will show all your articles. There are {articles.length}
+      {articles.map((p) => (
+        <Article
           {...p}
-          handleClick={props.handleClickOneBlogPost}
+          handleClick={props.handleClickOneArticle}
           key={p.id}
         />
       ))}
@@ -72,7 +72,7 @@ const BlogPosts: React.FC<IBlogPostsProps> = (props) => {
   );
 };
 
-const BlogPost: React.FC<IBlogPostProps> = ({
+const Article: React.FC<IArticleProps> = ({
   id,
   title,
   prose,
@@ -80,7 +80,7 @@ const BlogPost: React.FC<IBlogPostProps> = ({
   handleClick,
 }) => {
   return (
-    <div className="blog-post">
+    <div className="article">
       <h2 onClick={() => handleClick(id)}>{title}</h2>
       <div>{prose}</div>
       <div>Written on {date}</div>
@@ -88,44 +88,46 @@ const BlogPost: React.FC<IBlogPostProps> = ({
   );
 };
 
-interface ISingleBlogPostProps {
+interface ISingleArticleProps {
   id: number;
 }
 interface IComment {
   id: number;
-  post_id: number;
+  article_id: number;
   prose: string;
   date: string;
 }
 
 interface ICommentProps extends IComment { }
 
-const SingleBlogPost: React.FC<ISingleBlogPostProps> = ({ id }) => {
-  const [post, setPost] = useState<IBlogPost | null>(null);
+const SingleArticle: React.FC<ISingleArticleProps> = ({ id }) => {
+  const [article, setArticle] = useState<IArticle | null>(null);
   const [comments, setComments] = useState<IComment[]>([]);
 
-  const fetchAndStoreComments = async () => {
-    const res = await fetch(apiBaseURL + `/articles/${id}/comments`);
-    const json = await res.json();
-    setComments(json);
-  };
-
-  const fetchAndStorePost = async () => {
-    const res = await fetch(apiBaseURL + `/articles/${id}`);
-    const json = await res.json();
-    setPost(json);
-  };
 
   useEffect(() => {
+
+    const fetchAndStoreArticle = async () => {
+      const res = await fetch(apiBaseURL + `/articles/${id}`);
+      const json = await res.json();
+      setArticle(json);
+    };
+
+    const fetchAndStoreComments = async () => {
+      const res = await fetch(apiBaseURL + `/articles/${id}/comments`);
+      const json = await res.json();
+      setComments(json);
+    };
+
     fetchAndStoreComments();
-    fetchAndStorePost();
+    fetchAndStoreArticle();
   }, [id]);
-  if (post !== null && comments !== null) {
+  if (article !== null && comments !== null) {
     return (
-      <div className="blog-post">
-        <h2>{post.title}</h2>
-        <div>{post.prose}</div>
-        <div>Written on {post.date}</div>
+      <div className="article">
+        <h2>{article.title}</h2>
+        <div>{article.prose}</div>
+        <div>Written on {article.date}</div>
         <div className="commentsList">
           {comments.map((c) => (
             <Comment {...c} key={c.id} />
