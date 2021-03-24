@@ -52,7 +52,7 @@ interface IBlogPostsProps {
 const BlogPosts: React.FC<IBlogPostsProps> = (props) => {
   const [posts, setPosts] = useState<IBlogPost[]>([]);
   const fetchAndStorePosts = () => {
-    fetch(`${apiBaseURL}/posts/`)
+    fetch(`${apiBaseURL}/articles/`)
       .then((res) => res.json())
       .then((json) => setPosts(json));
   };
@@ -98,20 +98,20 @@ interface IComment {
   date: string;
 }
 
-interface ICommentProps extends IComment {}
+interface ICommentProps extends IComment { }
 
 const SingleBlogPost: React.FC<ISingleBlogPostProps> = ({ id }) => {
   const [post, setPost] = useState<IBlogPost | null>(null);
   const [comments, setComments] = useState<IComment[]>([]);
 
   const fetchAndStoreComments = async () => {
-    const res = await fetch(apiBaseURL + `/posts/${id}/comments`);
+    const res = await fetch(apiBaseURL + `/articles/${id}/comments`);
     const json = await res.json();
     setComments(json);
   };
 
   const fetchAndStorePost = async () => {
-    const res = await fetch(apiBaseURL + `/posts/${id}`);
+    const res = await fetch(apiBaseURL + `/articles/${id}`);
     const json = await res.json();
     setPost(json);
   };
