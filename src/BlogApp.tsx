@@ -47,7 +47,7 @@ interface IArticlesProps {
 const Articles: React.FC<IArticlesProps> = (props) => {
   const [articles, setArticles] = useState<IArticle[]>([]);
   const fetchAndStoreArticles = () => {
-    fetch(`${apiBaseURL}/articles/`)
+    fetch(`${apiBaseURL}/posts/`)
       .then((res) => res.json())
       .then((json) => setArticles(json));
   };
