@@ -1,14 +1,15 @@
+import axios from "axios";
 import { useEffect, useState } from "react";
+import apiBaseURL from "../api";
 import { IArticle, IArticleDraft } from "../types";
+import "./App.css";
 import { ArticleForm } from "./ArticleForm";
 import { ArticleList } from "./ArticleList";
 import SingleArticle from "./SingleArticle";
-import "./App.css";
-import axios from "axios";
-import apiBaseURL from "../api";
 
 function BlogApp(): JSX.Element {
     const [articles, setArticles] = useState<IArticle[]>([]);
+    const [focusedId, setFocusedId] = useState<number | null>(null);
 
     const fetchAndStoreArticles = async () => {
         const response = await axios.get(apiBaseURL + "/articles");
@@ -22,6 +23,7 @@ function BlogApp(): JSX.Element {
     const handleClickOneArticle: (id: number) => void = (id: number) => {
         setFocusedId(id);
     };
+
     const handleClickListAll: () => void = () => {
         setFocusedId(null);
     };
@@ -35,7 +37,6 @@ function BlogApp(): JSX.Element {
         await fetchAndStoreArticles();
         return true;
     }
-    const [focusedId, setFocusedId] = useState<number | null>(null);
 
     return (
         <div className="App">
@@ -47,12 +48,12 @@ function BlogApp(): JSX.Element {
                 )}
             </header>
             <main>
+                <ArticleForm onArticleSubmit={handleArticleSubmit} />
                 {focusedId === null ? (
                     <ArticleList {...{ articles, handleClickOneArticle }} />
                 ) : (
                     <SingleArticle id={focusedId} />
                 )}
-                <ArticleForm onArticleSubmit={handleArticleSubmit} />
             </main>
             <footer>this is the footer</footer>
         </div>
