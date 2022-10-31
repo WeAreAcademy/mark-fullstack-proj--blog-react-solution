@@ -1,3 +1,4 @@
+import { formatRelative } from "date-fns";
 import { IArticle } from "../types";
 
 interface IArticleProps extends IArticle {
@@ -14,7 +15,7 @@ export function Article({
         <div className="article">
             <h2 onClick={() => handleClick(id)}>{title}</h2>
             <div>{prose}</div>
-            <div>Written on {date}</div>
+            <div>Written {formatRelative(new Date(date), new Date())}</div>
         </div>
     );
 }
