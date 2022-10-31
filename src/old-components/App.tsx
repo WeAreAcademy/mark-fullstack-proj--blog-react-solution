@@ -1,9 +1,8 @@
-import React from "react";
 import "./App.css";
 import BlogApp from "./BlogApp";
 
 function App() {
-  return <BlogApp />;
+    return <BlogApp />;
 }
 
 export default App;
