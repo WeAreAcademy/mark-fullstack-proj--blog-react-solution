@@ -2,7 +2,7 @@ import { useState } from "react";
 import { IArticleDraft } from "../types";
 
 interface IArticleFormProps {
-    onArticleSubmit: (article: IArticleDraft) => void;
+    onArticleSubmit: (article: IArticleDraft) => Promise<boolean>;
 }
 export function ArticleForm(props: IArticleFormProps): JSX.Element {
     const [title, setTitle] = useState("");
@@ -14,10 +14,17 @@ export function ArticleForm(props: IArticleFormProps): JSX.Element {
     function handleChangeProse(text: string) {
         setProse(text);
     }
-    function handleSubmitArticle() {
+    async function handleSubmitArticle() {
         const article: IArticleDraft = { title, prose };
-        props.onArticleSubmit(article);
+        await props.onArticleSubmit(article);
+        clearFormFields();
     }
+
+    function clearFormFields() {
+        setTitle("");
+        setProse("");
+    }
+
     return (
         <div className="article">
             <h2>New Article</h2>
